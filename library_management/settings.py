@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'silk',
+    'django_filters',
     'user.apps.UserConfig',
     'library.apps.LibraryConfig',
     'django.contrib.admin',

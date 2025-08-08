@@ -1,10 +1,38 @@
 from django.db import models
 from .choices import CategoryChoice
+from django.core.validators import MinValueValidator
 
 class Category(models.Model):
     name = models.CharField(max_length=20, choices=CategoryChoice.choices, unique=True)
+
+    def __str__(self):
+        return f"Category = {self.name}"
 
 class Author(models.Model):
     name = models.CharField(max_length=50, unique=True)
     bio = models.TextField()
 
+    def __str__(self):
+        return f"Author = {self.name}"
+
+class Book(models.Model):
+    title = models.CharField(max_length=100, unique=True)
+    description = models.TextField()
+    author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name="books")
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="books", db_index=True)
+    total_copies = models.PositiveIntegerField(validators=[MinValueValidator(1)])
+    available_copies = models.PositiveIntegerField()
+
+    def __str__(self):
+        return f"{self.title} is written by {self.author.name}"
+
+    def is_available(self):
+        return self.available_copies > 0
+    
+    def decrement_copies(self):
+        self.available_copies -= 1
+        self.save(update_fields=["available_copies"])
+
+    def increment_copies(self):
+        self.available_copies += 1
+        self.save(update_fields=["available_copies"])
