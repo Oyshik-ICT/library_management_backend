@@ -8,6 +8,7 @@ from django.shortcuts import get_object_or_404
 from datetime import date, timedelta
 from django.db import transaction
 from .serializers import BorrowSerializer
+from user.models import CustomUser
 
 class BorrowView(APIView):
     permission_classes = [IsAuthenticated]
@@ -90,6 +91,28 @@ class ReturnBookViewset(APIView):
                     {"details": "Book returns succesfully"},
                     status=status.HTTP_200_OK
                 )
+
+class UserPenaltyPointsView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, id):
+        current_user = request.user
+        try:
+            target_user = CustomUser.objects.get(pk=id)
+        except CustomUser.DoesNotExist:
+            return Response(
+                {"details": "User doesn't exit"},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        if current_user.is_staff or target_user == current_user:
+            return Response({"details": f"Total penalty points of {target_user.username} is {target_user.penalty_points}"}, status=status.HTTP_200_OK)
+        
+        return Response(
+                {"details": "You don't have permission to do this"},
+                status=status.HTTP_403_FORBIDDEN
+            )
+        
 
 
 

@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from borrowing.views import BorrowView, ReturnBookViewset
+from borrowing.views import BorrowView, ReturnBookViewset, UserPenaltyPointsView
 
 
 urlpatterns = [
@@ -29,5 +29,6 @@ urlpatterns = [
     path('api/books/', include('library.urls.book_urls')),
     path('api/borrow/', BorrowView.as_view(), name="borrow"),
     path('api/return/', ReturnBookViewset.as_view(), name="return-book"),
+    path('api/users/<int:id>/penalties', UserPenaltyPointsView.as_view(), name="penalty-points"),
     path('silk/', include('silk.urls', namespace='silk')),
 ]
