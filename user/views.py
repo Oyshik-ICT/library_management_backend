@@ -1,9 +1,22 @@
+import logging
+
 from rest_framework import viewsets
-from .models import CustomUser
-from .serializers import CustomUserSerializer
 from rest_framework.permissions import AllowAny, IsAuthenticated
 
+from .models import CustomUser
+from .serializers import CustomUserSerializer
+
+logger = logging.getLogger(__name__)
+
+
 class CustomUserViewset(viewsets.ModelViewSet):
+    """
+    API endpoints to CustomUser objects
+    - Anyone can create user
+    -Authenticated user can view/update their own data
+    - Staff can view/update all data
+    """
+
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
 
@@ -13,13 +26,19 @@ class CustomUserViewset(viewsets.ModelViewSet):
         else:
             self.permission_classes = [IsAuthenticated]
         return super().get_permissions()
-    
+
     def get_queryset(self):
-        user = self.request.user
-        qs = super().get_queryset()
+        try:
+            user = self.request.user
+            qs = super().get_queryset()
 
-        if not user.is_staff:
-            qs = qs.filter(username=user)
+            if not user.is_staff:
+                qs = qs.filter(username=user)
 
-        return qs
-        
+            return qs
+        except Exception as e:
+            logger.error(
+                f"Error occure in get_queryset method in CustomUserViewset => {e}",
+                exc_info=True,
+            )
+            return CustomUser.objects.none()

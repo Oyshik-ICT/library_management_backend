@@ -14,21 +14,26 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import include, path
+
 from borrowing.views import BorrowView, ReturnBookViewset, UserPenaltyPointsView
 
-
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('api/login/', include('user.urls.token_urls')),
-    path('api/register/', include('user.urls.regi_urls')),
-    path('api/user/', include('user.urls.user_urls')),
-    path('api/categories/', include('library.urls.category_urls')),
-    path('api/authors/', include('library.urls.author_urls')),
-    path('api/books/', include('library.urls.book_urls')),
-    path('api/borrow/', BorrowView.as_view(), name="borrow"),
-    path('api/return/', ReturnBookViewset.as_view(), name="return-book"),
-    path('api/users/<int:id>/penalties', UserPenaltyPointsView.as_view(), name="penalty-points"),
-    path('silk/', include('silk.urls', namespace='silk')),
+    path("admin/", admin.site.urls),
+    path("api/login/", include("user.urls.token_urls")),
+    path("api/register/", include("user.urls.regi_urls")),
+    path("api/user/", include("user.urls.user_urls")),
+    path("api/categories/", include("library.urls.category_urls")),
+    path("api/authors/", include("library.urls.author_urls")),
+    path("api/books/", include("library.urls.book_urls")),
+    path("api/borrow/", BorrowView.as_view(), name="borrow"),
+    path("api/return/", ReturnBookViewset.as_view(), name="return-book"),
+    path(
+        "api/users/<int:id>/penalties",
+        UserPenaltyPointsView.as_view(),
+        name="penalty-points",
+    ),
+    path("silk/", include("silk.urls", namespace="silk")),
 ]
