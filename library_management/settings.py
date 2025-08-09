@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django_filters',
     'user.apps.UserConfig',
     'library.apps.LibraryConfig',
+    'borrowing.apps.BorrowingConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -111,7 +112,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Dhaka'
 
 USE_I18N = True
 
